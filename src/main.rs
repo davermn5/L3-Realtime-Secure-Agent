@@ -25,6 +25,20 @@ enum Action {
     Drop
 }
 
-fn main() {
+#[tokio::main]
+async fn main() -> std::io::Result<()> {
+    env_logger::init();
+
+    //Firewall rule-pooling allows Multiple Atomic reference-counted handles to be accessed across different threads while maintaining availability to the shared (parent) Mutex synchronization primitive.
+    let rules:Arc<Mutex<Vec<FirewallRule>>> = Arc::new(Mutex::new(vec![]));
+
+    //Listen on pre-defined interface that the edge device is listening on
+    let interfaces = datalink::interfaces();
+    let interface = interfaces
+        .into_iter()
+        .find(|iface| iface.name == "en0")
+        .expect("Undiscoverable interface");
+
     println!("Hello, world!");
+    Ok(())
 }
