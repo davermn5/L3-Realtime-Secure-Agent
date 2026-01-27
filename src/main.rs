@@ -10,8 +10,13 @@ use tokio::net::TcpListener;
 use tokio::task;
 use log::{info, error};
 
+/* ConfigurableSDNPolicyRule
+    A rule which can be extended to self-modify received policies
+    from an external SDN-Controller. Initial static configuration
+    has been provided here.
+ */
 #[derive(Debug, Deserialize, Clone)]
-struct FirewallRule {
+struct ConfigurableSDNPolicyRule {
     src_ip: String,
     dst_ip: String,
     src_port: u16,
@@ -29,8 +34,8 @@ enum Action {
 async fn main() -> std::io::Result<()> {
     env_logger::init();
 
-    //Firewall rule-pooling allows Multiple Atomic reference-counted handles to be accessed across different threads while maintaining availability to the shared (parent) Mutex synchronization primitive.
-    let rules:Arc<Mutex<Vec<FirewallRule>>> = Arc::new(Mutex::new(vec![]));
+    //SDN policy rule-pooling allows Multiple Atomic reference-counted handles to be accessed across different threads while maintaining availability to the shared (parent) Mutex synchronization primitive.
+    let rules:Arc<Mutex<Vec<ConfigurableSDNPolicyRule>>> = Arc::new(Mutex::new(vec![]));
 
     //Listen on pre-defined interface that the edge device is listening on
     let interfaces = datalink::interfaces();
