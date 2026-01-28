@@ -37,7 +37,7 @@ async fn main() -> std::io::Result<()> {
     //SDN policy rule-pooling allows Multiple Atomic reference-counted handles to be accessed across different threads while maintaining availability to the shared (parent) Mutex synchronization primitive.
     let rules:Arc<Mutex<Vec<ConfigurableSDNPolicyRule>>> = Arc::new(Mutex::new(vec![]));
 
-    //Listen on pre-defined interface that the edge device is listening on
+    //Listen on pre-defined interface that the edge device is listening on 
     let interfaces = datalink::interfaces();
     let interface = interfaces
         .into_iter()
